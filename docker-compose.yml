@@ -33,10 +33,10 @@ services:
       - postgres
       - redis
     volumes:
-      - ./html:/var/www/html
+      - nextcloud:/var/www/html
       - ./custom_apps:/var/www/html/custom_apps
-      - ./config:/var/www/html/config
-      - ./data:/var/www/html/data
+      # - ./config:/var/www/html/config
+      - ./data:/mnt/data
       - /home/docker/mnt/fast/portainer-compose-unpacker/stacks/paperless-stack/docker-paperless/data:/mnt/paperless
       - ./remoteip.conf:/etc/apache2/conf-available/remoteip.conf:ro
       - ./redis-session.ini:/usr/local/etc/php/conf.d/redis-session.ini
@@ -67,6 +67,7 @@ services:
       - SMTP_PASSWORD=17+4Gleich21
       - MAIL_FROM_ADDRESS=paperniffler
       - MAIL_DOMAIN=hartig.es
+      - NEXTCLOUD_DATA_DIR=/mnt/data
 
   postgres:
     image: docker.io/library/postgres:17
@@ -147,7 +148,8 @@ services:
     entrypoint: /var/www/html/custom_apps/notify_push/bin/x86_64/notify_push /var/www/html/config/config.php
     volumes:
       - ./custom_apps:/var/www/html/custom_apps
-      - ./config:/var/www/html/config
+      # - ./config:/var/www/html/config
+      - nextcloud:/var/www/html
     networks:
       - traefik
       - internal
@@ -161,13 +163,14 @@ services:
     # special UID handling https://github.com/nextcloud/docker/issues/1740
     environment:
       - UID=1000
+      - NEXTCLOUD_DATA_DIR=/mnt/data
     depends_on:
       - app
     volumes:
-      - ./html:/var/www/html
+      - nextcloud:/var/www/html
       - ./custom_apps:/var/www/html/custom_apps
-      - ./data:/var/www/html/data
-      - ./config:/var/www/html/config
+      - ./data:/mnt/data
+      # - ./config:/var/www/html/config
       - ./cron.sh:/cron.sh
     entrypoint: /cron.sh
 
@@ -204,6 +207,7 @@ services:
 volumes:
   postgres:
   redis:
+  nextcloud:
 
 networks:
   internal:
