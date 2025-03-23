@@ -24,10 +24,11 @@ services:
     networks: 
       - internal
       - traefik
+    hostname: nextcloud
     ports:
-      -180:80
-      -18080:8080
-      -1443:443
+      - 180:80
+      - 18080:8080
+      - 1443:443
     depends_on:
       - postgres
       - redis
@@ -53,11 +54,19 @@ services:
       - PHP_MEMORY_LIMIT=1G
       - PHP_UPLOAD_LIMIT=10G
       - OVERWRITEHOST=nextcloud.hartig.es 
-      - overwrite.cli.url=https://nextcloud.hartig.es 
+      - OVERWRITECLIURL=https://nextcloud.hartig.es 
       - OVERWRITEPROTOCOL=https
       - TRUSTED_PROXIES=172.16.0.0/12 192.168.0.0/16 10.0.0.0/8 fc00::/7 fe80::/10 2001:db8::/32
       - NEXTCLOUD_ADMIN_USER=rahxam
       - NEXTCLOUD_ADMIN_PASSWORD=17+4Gleich21
+      - NEXTCLOUD_HOSTNAME=nextcloud.hartig.es
+      - SMTP_HOST=smtp.hartig.es
+      - SMTP_PORT=587
+      - SMTP_SECURE=tls
+      - SMTP_NAME=paperniffler@gmail.com
+      - SMTP_PASSWORD=17+4Gleich21
+      - MAIL_FROM_ADDRESS=paperniffler
+      - MAIL_DOMAIN=hartig.es
 
   postgres:
     image: docker.io/library/postgres:17
