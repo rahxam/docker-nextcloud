@@ -34,7 +34,7 @@ services:
       - redis
     volumes:
       - nextcloud:/var/www/html
-      - ./custom_apps:/var/www/html/custom_apps
+      # - ./custom_apps:/var/www/html/custom_apps
       # - ./config:/var/www/html/config
       - /home/docker/mnt/fast33/nextcloud_data/data:/mnt/data
       - /home/docker/mnt/fast/portainer-compose-unpacker/stacks/paperless-stack/docker-paperless/data:/mnt/paperless
@@ -154,7 +154,7 @@ services:
       - NEXTCLOUD_URL=http://nextcloud        # don't go through the proxy to contact the nextcloud server
     entrypoint: /var/www/html/custom_apps/notify_push/bin/x86_64/notify_push /var/www/html/config/config.php
     volumes:
-      - ./custom_apps:/var/www/html/custom_apps
+      # - ./custom_apps:/var/www/html/custom_apps
       # - ./config:/var/www/html/config
       - nextcloud:/var/www/html
     networks:
@@ -175,7 +175,7 @@ services:
       - app
     volumes:
       - nextcloud:/var/www/html
-      - ./custom_apps:/var/www/html/custom_apps
+      # - ./custom_apps:/var/www/html/custom_apps
       - /home/docker/mnt/fast33/nextcloud_data/data:/mnt/data
       # - ./config:/var/www/html/config
       - ./cron.sh:/cron.sh
