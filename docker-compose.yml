@@ -50,7 +50,7 @@ services:
       - overwrite.cli.url=https://nextcloud.hartig.es 
       - OVERWRITEPROTOCOL=https
 
-  db:
+  postgres:
     image: docker.io/library/postgres:17
     deploy:
       replicas: 1
