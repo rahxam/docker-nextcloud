@@ -125,7 +125,7 @@ services:
   notify_push:
     image: nextcloud:31
     deploy:
-      replicas: 0
+      replicas: 1
       restart_policy:
         condition: on-failure
       labels:
@@ -157,7 +157,7 @@ services:
   cron:
     image: nextcloud:31
     deploy:
-      replicas: 0
+      replicas: 1
       restart_policy:
         condition: on-failure
     # special UID handling https://github.com/nextcloud/docker/issues/1740
