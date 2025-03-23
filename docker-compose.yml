@@ -24,6 +24,10 @@ services:
     networks: 
       - internal
       - traefik
+    ports:
+      -180:80
+      -18080:8080
+      -1443:443
     depends_on:
       - postgres
       - redis
