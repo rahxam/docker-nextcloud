@@ -120,7 +120,7 @@ services:
       - username=rahxam
       - domain=collabora.hartig.es
       - aliasgroup1=https://nextcloud.hartig.es:443
-      - extra_params=--o:ssl.enable=false --o:ssl.termination=true}
+      - extra_params=--o:ssl.enable=false --o:ssl.termination=true
       - 'dictionaries=en_US,de_DE,es_ES'
       - VIRTUAL_PROTO=http
       - VIRTUAL_PORT=9980
