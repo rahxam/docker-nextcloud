@@ -1,0 +1,191 @@
+---
+version: '3'
+
+services:
+  nextcloud:
+    image: nextcloud
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.stack.network=traefik"  
+
+        - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.hartig.es`)"
+        - "traefik.http.routers.nextcloud.entrypoints=https"
+        - "traefik.http.routers.nextcloud.tls=true"
+        - "traefik.http.routers.nextcloud.priority=1"
+
+        - "traefik.http.services.nextcloud.loadbalancer.server.port=80"
+
+        
+        - "traefik.constraint=proxy-public"
+    networks: 
+      - internal
+      - traefik
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./html:/var/www/html
+      - ./custom_apps:/var/www/html/custom_apps
+      - ./config:/var/www/html/config
+      - ./data:/var/www/html/data
+      - /home/docker/mnt/fast/portainer-compose-unpacker/stacks/paperless-stack/docker-paperless/data:/var/www/html/paperless
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - POSTGRES_DATABASE=nextcloud
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD=dbpassword
+      - POSTGRES_HOST=postgres
+      - REDIS_HOST=redis
+      - NEXTCLOUD_FQDN=nextcloud.hartig.es
+      - NEXTCLOUD_TRUSTED_DOMAINS=nextcloud.hartig.es 
+      - PHP_MEMORY_LIMIT=1G
+      - PHP_UPLOAD_LIMIT=10G
+      - OVERWRITEHOST=nextcloud.hartig.es 
+      - overwrite.cli.url=https://nextcloud.hartig.es 
+      - OVERWRITEPROTOCOL=https
+
+    db:
+    image: docker.io/library/postgres:17
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+          - node.labels.database == true
+    networks:
+      - internal
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD=dbpassword
+      
+  collabora:
+    image: collabora/code
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.stack.network=traefik"  
+
+        - "traefik.http.routers.collabora.rule=Host(`collabora.hartig.es`)"
+        - "traefik.http.routers.collabora.entrypoints=https"
+        - "traefik.http.routers.collabora.tls=true"
+        - "traefik.http.routers.collabora.priority=1"
+
+        - "traefik.http.services.collabora.loadbalancer.server.port=9980"
+                
+        - "traefik.constraint=proxy-public"
+    networks: 
+      - internal
+      - traefik
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - password=password
+      - username=nextcloud
+      - domain=collabora.hartig.es
+      - aliasgroup1=https://nextcloud.hartig.es:443
+      - extra_params=--o:ssl.enable=true
+
+  notify_push:
+    image: nextcloud
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.stack.network=traefik"  
+        - traefik.http.routers.nextcloud_notify_push.entryPoints=https
+        - traefik.http.routers.nextcloud_notify_push.priority=2
+        - traefik.http.routers.nextcloud_notify_push.middlewares=nextcloud_strip_push
+        - traefik.http.routers.nextcloud_notify_push.tls=true
+        # necessary for the notify_push app to work:
+        - traefik.http.routers.nextcloud_notify_push.rule=Host(`nextcloud.hartig.es`) && PathPrefix(`/push`)
+        - traefik.http.routers.nextcloud_notify_push.middlewares=nextcloud_striprefix_push@file
+        - traefik.http.services.nextcloud_notify_push.loadbalancer.server.port=7867
+    user: 1000:1000
+    depends_on:
+      - nextcloud
+    environment:
+      - PORT=7867
+      - NEXTCLOUD_URL=http://nextcloud        # don't go through the proxy to contact the nextcloud server
+    entrypoint: /var/www/html/custom_apps/notify_push/bin/x86_64/notify_push /var/www/html/config/config.php
+    volumes:
+      - ./apps:/var/www/html/custom_apps
+      - ./config:/var/www/html/config
+    networks:
+      - traefik
+      - internal
+
+  cron:
+    image: nextcloud
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    # special UID handling https://github.com/nextcloud/docker/issues/1740
+    environment:
+      - UID=1000
+    depends_on:
+      - app
+    volumes:
+      - ./nextcloud:/var/www/html
+      - ./custom_apps:/var/www/html/custom_apps
+      - ./data:/var/www/html/data
+      - ./config:/var/www/html/config
+      - ./cron.sh:/cron.sh
+    entrypoint: /cron.sh
+
+  imaginary:
+    image: nextcloud/aio-imaginary:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    user: 1000:1000
+    networks:
+      - internal
+    depends_on:
+      - nextcloud	  
+    environment:
+      - TZ=Europe/Berlin
+    cap_add:
+      - SYS_NICE
+    tmpfs:
+      - /tmp
+      
+  redis:
+    image: redis:alpine
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - redis:/data  
+    networks: 
+      - internal
+  
+
+volumes:
+  postgres:
+  redis:
+
+networks:
+  internal:
