@@ -32,7 +32,7 @@ services:
       - ./custom_apps:/var/www/html/custom_apps
       - ./config:/var/www/html/config
       - ./data:/var/www/html/data
-      - /home/docker/mnt/fast/portainer-compose-unpacker/stacks/paperless-stack/docker-paperless/data:/var/www/html/paperless
+      - /home/docker/mnt/fast/portainer-compose-unpacker/stacks/paperless-stack/docker-paperless/data:/mnt/paperless
     environment:
       - PUID=1000
       - PGID=1000
