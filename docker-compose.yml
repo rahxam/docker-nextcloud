@@ -150,12 +150,39 @@ services:
         - traefik.http.routers.nextcloud_notify_push.rule=Host(`nextcloud.hartig.es`) && PathPrefix(`/push`)
         - traefik.http.routers.nextcloud_notify_push.middlewares=nextcloud_striprefix_push@file
         - traefik.http.services.nextcloud_notify_push.loadbalancer.server.port=7867
-    user: 1000:1000
+    user: 33:33
     depends_on:
       - nextcloud
     environment:
       - PORT=7867
       - NEXTCLOUD_URL=http://nextcloud        # don't go through the proxy to contact the nextcloud server
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD=dbpassword
+      - POSTGRES_HOST=postgres
+      - REDIS_HOST=redis
+      - NEXTCLOUD_FQDN=nextcloud.hartig.es
+      - NEXTCLOUD_TRUSTED_DOMAINS=nextcloud.hartig.es 
+      - PHP_MEMORY_LIMIT=1G
+      - PHP_UPLOAD_LIMIT=10G
+      - OVERWRITEHOST=nextcloud.hartig.es 
+      - OVERWRITECLIURL=https://nextcloud.hartig.es 
+      - OVERWRITEPROTOCOL=https
+      - TRUSTED_PROXIES=172.16.0.0/12 192.168.0.0/16 10.0.0.0/8 fc00::/7 fe80::/10 2001:db8::/32
+      - NEXTCLOUD_ADMIN_USER=rahxam
+      - NEXTCLOUD_ADMIN_PASSWORD=17+4Gleich21
+      - NEXTCLOUD_HOSTNAME=nextcloud.hartig.es
+      - SMTP_HOST=smtp.hartig.es
+      - SMTP_PORT=587
+      - SMTP_SECURE=tls
+      - SMTP_NAME=paperniffler@gmail.com
+      - SMTP_PASSWORD=17+4Gleich21
+      - MAIL_FROM_ADDRESS=paperniffler
+      - MAIL_DOMAIN=hartig.es
+      - NEXTCLOUD_DATA_DIR=/mnt/data
     entrypoint: /var/www/html/custom_apps/notify_push/bin/x86_64/notify_push /var/www/html/config/config.php
     volumes:
       # - ./custom_apps:/var/www/html/custom_apps
@@ -173,8 +200,36 @@ services:
         condition: on-failure
     # special UID handling https://github.com/nextcloud/docker/issues/1740
     environment:
-      - UID=1000
+      - UID=33
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD=dbpassword
+      - POSTGRES_HOST=postgres
+      - REDIS_HOST=redis
+      - NEXTCLOUD_FQDN=nextcloud.hartig.es
+      - NEXTCLOUD_TRUSTED_DOMAINS=nextcloud.hartig.es 
+      - PHP_MEMORY_LIMIT=1G
+      - PHP_UPLOAD_LIMIT=10G
+      - OVERWRITEHOST=nextcloud.hartig.es 
+      - OVERWRITECLIURL=https://nextcloud.hartig.es 
+      - OVERWRITEPROTOCOL=https
+      - TRUSTED_PROXIES=172.16.0.0/12 192.168.0.0/16 10.0.0.0/8 fc00::/7 fe80::/10 2001:db8::/32
+      - NEXTCLOUD_ADMIN_USER=rahxam
+      - NEXTCLOUD_ADMIN_PASSWORD=17+4Gleich21
+      - NEXTCLOUD_HOSTNAME=nextcloud.hartig.es
+      - SMTP_HOST=smtp.hartig.es
+      - SMTP_PORT=587
+      - SMTP_SECURE=tls
+      - SMTP_NAME=paperniffler@gmail.com
+      - SMTP_PASSWORD=17+4Gleich21
+      - MAIL_FROM_ADDRESS=paperniffler
+      - MAIL_DOMAIN=hartig.es
       - NEXTCLOUD_DATA_DIR=/mnt/data
+    networks:
+      - internal
     depends_on:
       - app
     volumes:
