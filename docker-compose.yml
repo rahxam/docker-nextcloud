@@ -107,18 +107,22 @@ services:
         - "traefik.http.routers.collabora.priority=11"
 
         - "traefik.http.services.collabora.loadbalancer.server.port=9980"
+        - "traefik.http.middlewares.collabora-https-redirect.redirectscheme.scheme=https"
+        - "traefik.http.routers.collabora.middlewares=collabora-https-redirect"
 
         - "traefik.constraint=proxy-public"
     networks: 
       - internal
       - traefik
     environment:
+      - COLLABORA_FQDN=collabora.hartig.es
+      - COLLABORA_DOMAINS="nextcloud.hartig.es"
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Berlin
       - password=17+4Gleich21
       - username=rahxam
-      - domain=collabora.hartig.es
+      - domain=nextcloud.hartig.es
       - aliasgroup1=https://nextcloud.hartig.es:443
       - extra_params=--o:ssl.enable=false --o:ssl.termination=true
       - 'dictionaries=en_US,de_DE,es_ES'
