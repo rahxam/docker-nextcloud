@@ -122,7 +122,7 @@ services:
       - TZ=Europe/Berlin
       - password=17+4Gleich21
       - username=rahxam
-      - domain=nextcloud.hartig.es
+      - domain=nextcloud\.hartig\.es
       - aliasgroup1=https://nextcloud.hartig.es:443
       - extra_params=--o:ssl.enable=false --o:ssl.termination=true
       - 'dictionaries=en_US,de_DE,es_ES'
