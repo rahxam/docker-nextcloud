@@ -37,7 +37,7 @@ services:
       # - ./custom_apps:/var/www/html/custom_apps
       # - ./config:/var/www/html/config
       - /home/docker/mnt/fast33/nextcloud_data/data:/mnt/data
-      - /home/docker/mnt/fast/portainer-compose-unpacker/stacks/paperless-stack/docker-paperless/data:/mnt/paperless
+      - /home/docker/mnt/fast33/paperless_data:/mnt/paperless
       - ./remoteip.conf:/etc/apache2/conf-available/remoteip.conf:ro
       - ./redis-session.ini:/usr/local/etc/php/conf.d/redis-session.ini
     environment:
