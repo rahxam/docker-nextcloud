@@ -88,7 +88,7 @@ services:
         - "traefik.http.routers.collabora.priority=1"
 
         - "traefik.http.services.collabora.loadbalancer.server.port=9980"
-                
+
         - "traefik.constraint=proxy-public"
     networks: 
       - internal
@@ -97,8 +97,8 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Berlin
-      - password=password
-      - username=nextcloud
+      - password=17+4Gleich21
+      - username=rahxam
       - domain=collabora.hartig.es
       - aliasgroup1=https://nextcloud.hartig.es:443
       - extra_params=--o:ssl.enable=true
