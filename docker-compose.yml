@@ -40,6 +40,7 @@ services:
       - /home/docker/mnt/fast33/paperless_data:/mnt/paperless
       - /home/docker/mnt/fast33/jdownloader:/mnt/jdownloader
       - /home/docker/mnt/fast/immich_data:/mnt/immich
+      - /home/docker/mnt/fast/calibre_data:/mnt/calibre
       - ./remoteip.conf:/etc/apache2/conf-available/remoteip.conf:ro
       - ./redis-session.ini:/usr/local/etc/php/conf.d/redis-session.ini
     environment:
@@ -62,13 +63,13 @@ services:
       - NEXTCLOUD_ADMIN_USER=rahxam
       - NEXTCLOUD_ADMIN_PASSWORD=17+4Gleich21
       - NEXTCLOUD_HOSTNAME=nextcloud.hartig.es
-      - SMTP_HOST=smtp.hartig.es
+      - SMTP_HOST=smtp.gmail.com
       - SMTP_PORT=587
       - SMTP_SECURE=tls
       - SMTP_NAME=paperniffler@gmail.com
-      - SMTP_PASSWORD=17+4Gleich21
+      - SMTP_PASSWORD=cmdjccrzhgkjnpws
       - MAIL_FROM_ADDRESS=paperniffler
-      - MAIL_DOMAIN=hartig.es
+      - MAIL_DOMAIN=gmail.com
       - NEXTCLOUD_DATA_DIR=/mnt/data
 
   postgres:
