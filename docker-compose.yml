@@ -38,7 +38,8 @@ services:
       # - ./config:/var/www/html/config
       - /home/docker/mnt/fast33/nextcloud_data/data:/mnt/data
       - /home/docker/mnt/fast33/paperless_data:/mnt/paperless
-      - /home/docker/mnt/fast33/jdownloader:/mnt/jdownloader
+      - /home/docker/mnt/slow33/downloads:/mnt/downloads
+      - /home/docker/mnt/slow33/media:/mnt/media
       - /home/docker/mnt/fast/immich_data:/mnt/immich
       - /home/docker/mnt/fast/calibre_data:/mnt/calibre
       - ./remoteip.conf:/etc/apache2/conf-available/remoteip.conf:ro
