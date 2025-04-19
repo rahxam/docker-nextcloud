@@ -41,7 +41,7 @@ services:
       - /home/docker/mnt/slow33/downloads:/mnt/downloads
       - /home/docker/mnt/slow33/media:/mnt/media
       - /home/docker/mnt/fast/immich_data:/mnt/immich
-      - /home/docker/mnt/fast/calibre_data:/mnt/calibre
+      - /home/docker/mnt/slow/calibre_data:/mnt/calibre
       - ./remoteip.conf:/etc/apache2/conf-available/remoteip.conf:ro
       - ./redis-session.ini:/usr/local/etc/php/conf.d/redis-session.ini
     environment:
